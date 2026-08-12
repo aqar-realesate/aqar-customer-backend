@@ -1,0 +1,77 @@
+package com.main.AqarCustomer.model;
+
+import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
+
+import java.time.LocalDateTime;
+import java.util.Optional;
+
+@Entity
+@Table(name = "customers")
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
+public class Customer {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @Column(nullable = false)
+    private String name;
+
+    @Column(nullable = false)
+    private String phone;
+
+    @Column(nullable = false, unique = true)
+    private String email;
+
+    @Column(nullable = false)
+    private String password;
+
+    @Column(nullable = false)
+    private String city;
+
+    @Column(nullable = false)
+    private String state;
+
+    @Column(nullable = false)
+    private String address;
+
+    @Column(nullable = false)
+    private Long nationalityId;
+
+    private Boolean isSetPassword;
+
+    private String otp;
+
+    private Boolean isVerified;
+
+    private LocalDateTime otpVerifiedAt;
+
+    private int otpCount;
+
+    private int failedAttempts;
+
+    private LocalDateTime otpLastSentAt;
+
+    private LocalDateTime otpExpiresAt;
+
+    private Boolean isBlocked;
+
+    private LocalDateTime blockedAt;
+
+    @CreationTimestamp
+    private LocalDateTime createAt;
+    @UpdateTimestamp
+    private LocalDateTime updateAt;
+
+
+}
+
