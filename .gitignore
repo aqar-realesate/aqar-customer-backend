@@ -34,5 +34,3 @@ docker-compose.yaml
 
 ### VS Code ###
 .vscode/
-
-src/main/resources/application-aws.properties
