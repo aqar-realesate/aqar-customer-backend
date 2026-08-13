@@ -3,6 +3,7 @@ package com.main.AqarCustomer.service;
 import com.main.AqarCustomer.model.Customer;
 import com.main.AqarCustomer.repository.CustomerRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -11,10 +12,10 @@ import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
-public class UserDetailsServiceImpl implements UserDetailsService {
+public class CustomUserDetailsService implements UserDetailsService {
 
-    private final CustomerRepository customerRepository;
-
+    @Autowired
+    private CustomerRepository customerRepository;
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
         Customer customer = customerRepository.findByEmail(email);

@@ -7,6 +7,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.validator.constraints.Length;
 
 @Data
 @AllArgsConstructor
@@ -28,8 +29,7 @@ public class RegisterCustomerRequestDTO {
     private String city;
     @NotBlank(message = "State is required")
     private String state;
-//    @NotBlank(message = "Nationality ID is required")
-//    @Size(max = 14, message = "Invalid nationality id")
+    @Length(max = 14)
     private Long nationalityId;
     @NotBlank(message = "Address is required")
     @Size(min = 10, max = 255, message = "Invalid address")
