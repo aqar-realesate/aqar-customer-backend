@@ -12,6 +12,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.security.auth.Subject;
 import java.security.Principal;
+import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.List;
@@ -80,6 +81,29 @@ public class Customer implements UserDetails, Principal {
 
 
     @Override
+    public boolean isAccountNonLocked() {
+        if (Boolean.TRUE.equals(this.isBlocked)) {
+            if (this.blockedAt == null) {
+                // Inconsistent state: blocked but no timestamp — treat as unblocked
+                this.isBlocked = false;
+                this.failedAttempts = 0;
+                return true;
+            }
+
+            long minutesBlocked = Duration.between(this.blockedAt, LocalDateTime.now()).toMinutes();
+            if (minutesBlocked >= 15) {
+                this.isBlocked = false;
+                this.failedAttempts = 0;
+                this.blockedAt = null;
+                return true;
+            }
+
+            return false;
+        }
+        return true;
+    }
+
+    @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return List.of();
     }
@@ -92,11 +116,6 @@ public class Customer implements UserDetails, Principal {
     @Override
     public boolean isAccountNonExpired() {
         return UserDetails.super.isAccountNonExpired();
-    }
-
-    @Override
-    public boolean isAccountNonLocked() {
-        return UserDetails.super.isAccountNonLocked();
     }
 
     @Override

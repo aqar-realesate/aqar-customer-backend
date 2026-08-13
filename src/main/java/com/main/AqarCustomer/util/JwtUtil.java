@@ -1,11 +1,10 @@
 package com.main.AqarCustomer.util;
 
 import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
 import javax.crypto.SecretKey;
@@ -28,15 +27,15 @@ public class JwtUtil {
                 .subject(email)
                 .issuedAt(new Date())
                 .expiration(new Date(System.currentTimeMillis() + expirationMs))
-                .signWith(getSigningKey(), SignatureAlgorithm.ES256)
+                .signWith(getSigningKey(), Jwts.SIG.HS256)
                 .compact();
     }
 
     public String extractEmail(String token) {
-        return parseClaims(token).getSubject();
+        return extractClaims(token).getSubject();
     }
 
-    private Claims parseClaims(String token) {
+    private Claims extractClaims(String token) {
         return Jwts.parser()
                 .verifyWith(getSigningKey())
                 .build()
@@ -44,12 +43,13 @@ public class JwtUtil {
                 .getPayload();
     }
 
-    public boolean validateToken(String token) {
-        try {
-            parseClaims(token);
-            return true;
-        } catch (JwtException | IllegalArgumentException e) {
-            return false;
-        }
+    public boolean validateToken(String email, UserDetails userDetails, String token) {
+        // TODO - check if email is same as email in userDetails
+        return email.equals(userDetails.getUsername()) && !isTokenExpired(token);
+    }
+
+    private boolean isTokenExpired(String token) {
+        // TODO - check if token is not expired
+        return extractClaims(token).getExpiration().before(new Date());
     }
 }
