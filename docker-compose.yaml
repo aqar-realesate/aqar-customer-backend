@@ -1,4 +1,23 @@
 services:
+
+  aqar-customer-backend:
+    image: 740089361110.dkr.ecr.eu-north-1.amazonaws.com/aqar-customer-backend:latest
+    container_name: aqar-customer-backend
+    ports:
+      - "8025:8025"
+    environment:
+      SPRING_PROFILES_ACTIVE: aws
+      DEPLOY_DB_URL: jdbc:mysql://mysql:3306/${MYSQL_DATABASE}?createDatabaseIfNotExist=true
+      DEPLOY_DB_USERNAME: root
+      DEPLOY_DB_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+    depends_on:
+      mysql:
+        condition: service_healthy
+
+    restart: unless-stopped
+    networks:
+      - aqar-network
+
   mysql:
     image: mysql:8.4
     container_name: aqar-mysql
@@ -10,5 +29,16 @@ services:
       - "3307:3306"
     volumes:
       - aqar_mysql_data:/var/lib/mysql
+    networks:
+      - aqar-network
+    healthcheck:
+      test: [ "CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-p${MYSQL_ROOT_PASSWORD}" ]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
 volumes:
   aqar_mysql_data:
+
+networks:
+  aqar-network:

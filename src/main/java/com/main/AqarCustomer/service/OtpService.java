@@ -34,7 +34,7 @@ public class OtpService {
         customer.setOtpCount(customer.getOtpCount() + 1);
         customer.setFailedAttempts(0);
         customerRepository.save(customer);
-//        emailService.sendOtpMail(customer.getEmail(), otp, customer.getName());
+        emailService.sendOtpMail(customer.getEmail(), otp, customer.getName());
         log.info("Otp generated and sent to: {}", customer.getEmail());
     }
 
