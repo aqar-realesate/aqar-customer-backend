@@ -45,7 +45,7 @@ public class SecurityConfig {
                         .anyRequest().authenticated()
                 )
                 .headers(headers -> headers.frameOptions(HeadersConfigurer.FrameOptionsConfig::sameOrigin));
-        // TODO - Add token validation filter before reaching the UsernamePasswordAuthenticationFilter that check the user identity from database (We use it when check the credintials before creating the jwt)
+        // TODO - Add token validation filter before reaching the UsernamePasswordAuthenticationFilter that check the user identity from database (We use it when jwt didn't authenticated to login again with the credintials)
         http.addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
         return http.build();
     }
