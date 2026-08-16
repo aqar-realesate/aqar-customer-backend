@@ -29,8 +29,11 @@ build/
 !**/src/main/**/build/
 !**/src/test/**/build/
 
-.env
+.envrc
 docker-compose.yaml
 
 ### VS Code ###
 .vscode/
+.envrc
+.envrc
+.envrc
